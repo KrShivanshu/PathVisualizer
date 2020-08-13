@@ -19,6 +19,8 @@ public:
 	void Draw() override;
 
     private:
+    string _nodeSelected;
+
 	shared_ptr<Content>_content;
     Sprite _background;
     Sprite _cellsBG;
@@ -43,6 +45,11 @@ public:
     Text _visT;
     Text _unVisT;
     Text _wallT;
+    Vector2i _startCo = Vector2i(16,15);
+    Vector2i _endCo = Vector2i(48,15);
+    int _cellStateInInt[66][30];
+    void CheckAndPlaceNode();
+    void MarkSelectedNodeText();
     
 
 };

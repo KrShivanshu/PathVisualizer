@@ -4,6 +4,7 @@
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
+	_nodeSelected = START_S;
 }
 
 GamePlay::~GamePlay()
@@ -30,6 +31,7 @@ void GamePlay::Init()
 		{
 		_cells[i][j].setTexture(_content->_assets->GetTexture("NODE"));
 		_cells[i][j].setPosition(i*25+25,j*25+175);
+		_cellStateInInt[i][j]=100;
 		}
 		
 	_unVisS.setTexture(_content->_assets->GetTexture("NODE"));
@@ -114,7 +116,10 @@ void GamePlay::Init()
 	_background.setOrigin(_background.getGlobalBounds().width / 2, _background.getGlobalBounds().height / 2);
 	_background.setPosition(_content->_window->getSize().x / 2, _content->_window->getSize().y / 2);
 	
-	
+	_cells[_startCo.x][_startCo.y].setTexture(_content->_assets->GetTexture("START"));
+	_cellStateInInt[_startCo.x][_startCo.y]=101;
+	_cells[_endCo.x][_endCo.y].setTexture(_content->_assets->GetTexture("END"));
+	_cellStateInInt[_endCo.x][_endCo.y]=102;
 }
 
 void GamePlay::ProcessInput()
@@ -126,6 +131,34 @@ void GamePlay::ProcessInput()
 		{
 			_content->_window->close();
 		}
+		else if (_content->_inputs->IsSpriteClicked(_cellsBG, Mouse::Left, *(_content->_window)))
+		{
+				CheckAndPlaceNode();
+		}
+		else if(_content->_inputs->IsSpriteClicked(_optionBG, Mouse::Left, *(_content->_window)))
+		{
+			if(_content->_inputs->IsTextClicked(_startT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_startS, Mouse::Left, *(_content->_window)))
+			{
+				_nodeSelected = START_S;
+				MarkSelectedNodeText();
+			}
+			else if(_content->_inputs->IsTextClicked(_endT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_endS, Mouse::Left, *(_content->_window)))
+			{
+				_nodeSelected = END_S;
+				MarkSelectedNodeText();
+			}
+			else if(_content->_inputs->IsTextClicked(_unVisT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_unVisS, Mouse::Left, *(_content->_window)))
+			{
+				_nodeSelected = UNV_S;
+				MarkSelectedNodeText();
+			}
+			else if(_content->_inputs->IsTextClicked(_wallT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_wallS, Mouse::Left, *(_content->_window)))
+			{
+				_nodeSelected = WALL_S;
+				MarkSelectedNodeText();
+			}
+		}
+		
 	}
 }
 
@@ -164,4 +197,79 @@ void GamePlay::Draw()
 	_content->_window->display();
 }
 
+void GamePlay::CheckAndPlaceNode()
+{
+	Vector2i touchPoint = _content->_inputs->GetMousePosition(*(_content->_window));
+	//FloatRect gridSize = _cellsBG.getGlobalBounds();
+	Vector2f gapOutsideOfGrid = Vector2f(25.f,175.f);
+	Vector2f gridLocalTouchPos = Vector2f(touchPoint.x - gapOutsideOfGrid.x, touchPoint.y - gapOutsideOfGrid.y);
+	
 
+	int column, row;
+	column=gridLocalTouchPos.x/25.f;
+	row=gridLocalTouchPos.y/25.f;
+	if(column == _startCo.x  && row==_startCo.y) { }
+	else if (column == _endCo.x  && row ==_endCo.y) { }
+	else
+	{
+		if(_nodeSelected == WALL_S){
+		_cells[column][row].setTexture(_content->_assets->GetTexture("WALL"));
+		_cellStateInInt[column][row]=103;
+		}
+		else if(_nodeSelected == START_S && _cellStateInInt[column][row]!=103)
+		{
+		_cells[_startCo.x][_startCo.y].setTexture(_content->_assets->GetTexture("NODE"));
+		_cells[column][row].setTexture(_content->_assets->GetTexture("START"));
+		_cellStateInInt[column][row]=101;
+		_startCo=Vector2i(column,row);
+		}
+		else if(_nodeSelected == END_S && _cellStateInInt[column][row]!=103)
+		{
+		_cells[_endCo.x][_endCo.y].setTexture(_content->_assets->GetTexture("NODE"));
+		_cells[column][row].setTexture(_content->_assets->GetTexture("END"));
+		_cellStateInInt[column][row]=102;
+		_endCo=Vector2i(column,row);
+		}
+		else if(_nodeSelected == UNV_S && _cellStateInInt[column][row]!=102 && _cellStateInInt[column][row]!=102)
+		{
+		_cells[column][row].setTexture(_content->_assets->GetTexture("NODE"));
+		_cellStateInInt[column][row]=100;
+		}
+	}
+}
+
+void GamePlay::MarkSelectedNodeText()
+{
+	if(_nodeSelected == START_S)
+	{
+		_startT.setOutlineThickness(1.f);
+		_endT.setOutlineThickness(0.f);
+		_wallT.setOutlineThickness(0.f);
+		_unVisT.setOutlineThickness(0.f);
+		_startT.setOutlineColor(Color::White);
+	}
+	else if(_nodeSelected == END_S)
+	{
+		_startT.setOutlineThickness(0.f);
+		_endT.setOutlineThickness(1.f);
+		_wallT.setOutlineThickness(0.f);
+		_unVisT.setOutlineThickness(0.f);
+		_endT.setOutlineColor(Color::White);
+	}
+	else if(_nodeSelected == WALL_S)
+	{
+		_startT.setOutlineThickness(0.f);
+		_endT.setOutlineThickness(0.f);
+		_wallT.setOutlineThickness(1.f);
+		_unVisT.setOutlineThickness(0.f);
+		_wallT.setOutlineColor(Color::White);
+	}
+	else if(_nodeSelected == UNV_S)
+	{
+		_startT.setOutlineThickness(0.f);
+		_endT.setOutlineThickness(0.f);
+		_wallT.setOutlineThickness(0.f);
+		_unVisT.setOutlineThickness(1.f);
+		_unVisT.setOutlineColor(Color::White);
+	}
+}

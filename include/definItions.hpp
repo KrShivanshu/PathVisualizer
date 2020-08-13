@@ -21,3 +21,8 @@
 #define FUNCTION_BG "Assets/textures/Shine.jpg"
 #define CELLS_BG "Assets/textures/Bourbon.png"
 #define OPTION_BG "Assets/textures/Pizelex.jpg"
+
+#define START_S "START_BUTTON_SELECTED"
+#define END_S "END_BUTTON_SELECTED"
+#define UNV_S "UNVISIT_BUTTON_SELECTED"
+#define WALL_S "WALL_BUTTON_SELECTED"

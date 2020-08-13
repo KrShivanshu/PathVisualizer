@@ -13,6 +13,7 @@ namespace Engine
 		~InputMan() {}
 
 		bool IsSpriteClicked(Sprite object, Mouse::Button button, RenderWindow& window);
+		bool IsTextClicked(Text object, Mouse::Button button, RenderWindow& window);
 		Vector2i GetMousePosition(RenderWindow& window);
 	};
 }
