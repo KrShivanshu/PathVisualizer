@@ -17,6 +17,8 @@ public:
 	void ProcessInput() override;
 	void Update(Time deltaTime) override;
 	void Draw() override;
+    	void DrawVisited(int x,int y) override;
+		void DrawParent(int x,int y) override;
 
     private:
     string _nodeSelected;
@@ -50,6 +52,10 @@ public:
     int _cellStateInInt[66][30];
     void CheckAndPlaceNode();
     void MarkSelectedNodeText();
+    bool _drawMapB=false;
+    bool _clearMapB=false;
+    bool _visualizeB=false;
+    //void DrawVisited(int x,int y);
     
 
 };

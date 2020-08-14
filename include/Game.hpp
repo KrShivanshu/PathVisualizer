@@ -4,6 +4,7 @@
 #include "AssetMan.hpp"
 #include "InputMan.hpp"
 #include "StateMan.hpp"
+#include "AlgMan.hpp"
 using namespace std;
 using namespace sf;
 namespace Engine {
@@ -12,6 +13,7 @@ namespace Engine {
 		unique_ptr<AssetMan>_assets;
 		unique_ptr<InputMan>_inputs;
 		unique_ptr<StateMan>_states;
+		shared_ptr<AlgMan>_alg;
 		unique_ptr<RenderWindow>_window;
 
 		Content()
@@ -19,6 +21,7 @@ namespace Engine {
 			_assets = make_unique<AssetMan>();
 			_states = make_unique<StateMan>();
 			_inputs = make_unique<InputMan>();
+			_alg = make_shared<AlgMan>();
 			_window = make_unique<RenderWindow>();
 
 		}

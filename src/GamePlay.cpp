@@ -1,10 +1,12 @@
 #include "GamePlay.hpp"
 #include "definItions.hpp"
-
+#include "ASTAR.hpp"
+#include <random>
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
 	_nodeSelected = START_S;
+	srand(time(nullptr));
 }
 
 GamePlay::~GamePlay()
@@ -19,7 +21,7 @@ void GamePlay::Init()
 	_content->_assets->AddTextures("CELLS_BG",CELLS_BG);
 	_content->_assets->AddTextures("OPTION_BG",OPTION_BG);
 	_content->_assets->AddTextures("START",START);
-	_content->_assets->AddTextures("END",END);
+	_content->_assets->AddTextures("END",END); 
 	_content->_assets->AddTextures("PATH",PATH);
 	_content->_assets->AddTextures("VISITED1",VISITED1);
 	_content->_assets->AddTextures("VISITED2",VISITED2);
@@ -158,13 +160,83 @@ void GamePlay::ProcessInput()
 				MarkSelectedNodeText();
 			}
 		}
+		else if(_content->_inputs->IsSpriteClicked(_funcBG, Mouse::Left, *(_content->_window)))
+		{
+			if(_content->_inputs->IsTextClicked(_drawmap, Mouse::Left, *(_content->_window)) )
+			{
+				_drawMapB=true;
+			}
+			else if(_content->_inputs->IsTextClicked(_clear, Mouse::Left, *(_content->_window)) )
+			{
+				_clearMapB=true;
+			}
+			else if(_content->_inputs->IsTextClicked(_visualize, Mouse::Left, *(_content->_window)) )
+			{
+				_visualizeB=true;
+			}
+		}
 		
 	}
 }
 
 void GamePlay::Update(Time deltaTime)
 {
-	
+
+	if(_visualizeB)
+	{
+		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
+		_content->_alg->ProcessAlgorithmChange();
+		_content->_alg->GetCurrentAlgorithm()->SolveStepByStep(_cellStateInInt);
+		_content->_alg->GetCurrentAlgorithm()->Path();
+
+		_visualizeB=false;
+	}
+
+	if(_drawMapB)
+	{
+		for(int i=0;i<COL;i++)
+		{
+			for(int j=0;j<ROW;j++)
+			{
+				if(_cellStateInInt[i][j]==103)
+				{
+				_cellStateInInt[i][j]=100;
+				_cells[i][j].setTexture(_content->_assets->GetTexture("NODE"));
+				}
+			}
+		}
+		int x = 0, y = 0,n=0;
+				n=400+rand()%400;//distrn(gen);
+				for(int i=0;i<n;i++)
+				{
+					x = rand()%COL;//distrx(gen);
+					y = rand()%ROW;//distry(gen);
+					if(x == _startCo.x  && y==_startCo.y) { }
+					else if (x == _endCo.x  && y ==_endCo.y) { }
+					else
+					{
+					_cellStateInInt[x][y]=103;
+					_cells[x][y].setTexture(_content->_assets->GetTexture("WALL"));
+					//_content->_window->draw(_cells[x][y]);
+					}
+				}
+		_drawMapB=false;
+	}
+	if(_clearMapB)
+	{
+		for(int i=0;i<COL;i++)
+		{
+			for(int j=0;j<ROW;j++)
+			{
+				if(_cellStateInInt[i][j]!=101 && _cellStateInInt[i][j]!=102)
+				{
+				_cellStateInInt[i][j]=100;
+				_cells[i][j].setTexture(_content->_assets->GetTexture("NODE"));
+				}
+			}
+		}
+		_clearMapB=false;
+	}
 }
 
 void GamePlay::Draw()
@@ -272,4 +344,16 @@ void GamePlay::MarkSelectedNodeText()
 		_unVisT.setOutlineThickness(1.f);
 		_unVisT.setOutlineColor(Color::White);
 	}
+}
+
+void GamePlay::DrawVisited(int x,int y)
+{
+	_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED1"));
+	_content->_window->draw(_cells[x][y]);
+}
+
+void GamePlay::DrawParent(int x,int y)
+{
+	_cells[x][y].setTexture(_content->_assets->GetTexture("PATH"));
+	_content->_window->draw(_cells[x][y]);
 }

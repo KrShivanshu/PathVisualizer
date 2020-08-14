@@ -15,5 +15,7 @@ namespace Engine {
 
 		virtual void Start() {}
 		virtual void Pause() {}
+		virtual void DrawVisited(int x,int y) {}
+		virtual void DrawParent(int x,int y) {}
 	};
 }
