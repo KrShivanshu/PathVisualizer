@@ -48,81 +48,8 @@ void ASTAR::Init()
 				*/
 			}
 }
-void ASTAR::SolveAtOnce(int arr[COL][ROW])
-{
-    for (int x = 0; x < COL; x++)
-            for (int y = 0; y < ROW; y++)
-			{
-                if(arr[x][y]==101)
-                startNode=&nodes[y*COL + x];
-                if(arr[x][y]==102)
-                endNode=&nodes[y*COL + x];
-                
 
-                if(arr[x][y]!=103)
-				nodes[y * COL + x].bObstacle = false;
-                else
-                nodes[y * COL + x].bObstacle = true;
-                
-				nodes[y * COL + x].parent = nullptr;
-				nodes[y * COL + x].bVisited = false;
-                nodes[y * COL + x].isParent = false;
-				nodes[y * COL + x].bVisited = false;
-				nodes[y * COL + x].fGlobalGoal = INFINITY;
-				nodes[y * COL + x].fLocalGoal = INFINITY;
-				
-            }
-
-        auto _distance = [](Node* a, Node* b)
-		{
-			return sqrtf((a->x - b->x)*(a->x - b->x) + (a->y - b->y)*(a->y - b->y));
-		};
-
-		auto heuristic = [_distance](Node* a, Node* b)
-		{
-			return _distance(a, b);
-		};
-
-		Node *nodeCurrent = startNode;
-		startNode->fLocalGoal = 0.0f;
-		startNode->fGlobalGoal = heuristic(startNode, endNode);
-
-		list<Node*> listNotTestedNodes;
-		listNotTestedNodes.push_back(startNode);
-
-		while (!listNotTestedNodes.empty() && nodeCurrent != endNode)
-		{
-
-			listNotTestedNodes.sort([](const Node* lhs, const Node* rhs) { return lhs->fGlobalGoal < rhs->fGlobalGoal; });
-
-			while (!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
-				listNotTestedNodes.pop_front();
-
-			if (listNotTestedNodes.empty())
-				break;
-
-			nodeCurrent = listNotTestedNodes.front();
-			nodeCurrent->bVisited = true;
-
-			for (auto nodeNeighbour : nodeCurrent->vecNeighbours)
-			{
-				if (!nodeNeighbour->bVisited && nodeNeighbour->bObstacle == 0)
-					listNotTestedNodes.push_back(nodeNeighbour);
-
-				float fPossiblyLowerGoal = nodeCurrent->fLocalGoal + _distance(nodeCurrent, nodeNeighbour);
-
-				if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
-				{
-					nodeNeighbour->parent = nodeCurrent;
-					nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
-
-					nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, endNode);
-				}
-			}
-		}
-}
-
-void ASTAR::SolveStepByStep(int arr[COL][ROW])
+void ASTAR::Solve(int arr[COL][ROW])
 {
     for (int x = 0; x < COL; x++)
             for (int y = 0; y < ROW; y++)

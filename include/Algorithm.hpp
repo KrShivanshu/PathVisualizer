@@ -33,8 +33,7 @@ struct Node
 		~Algorithm() {};
 
 		virtual void Init() = 0;
-		virtual void SolveStepByStep(int arr[COL][ROW]) = 0;
-		virtual void SolveAtOnce(int arr[COL][ROW]) = 0;
+		virtual void Solve(int arr[COL][ROW]) = 0;
 		virtual void Path() = 0;
 		
 

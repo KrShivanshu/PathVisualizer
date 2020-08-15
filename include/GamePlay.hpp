@@ -52,9 +52,16 @@ public:
     int _cellStateInInt[66][30];
     void CheckAndPlaceNode();
     void MarkSelectedNodeText();
+    void ClearVisitedAndPath();
     bool _drawMapB=false;
     bool _clearMapB=false;
     bool _visualizeB=false;
+    Time TIME_PER_FRAME;
+    Time _elapsedTimeForVisited=Time::Zero;
+    bool _solveStepByStepB=true;
+    bool _solveFastB=false;
+    bool _solvedOnceB=false;
+    string _selectedAlgo;
     //void DrawVisited(int x,int y);
     
 

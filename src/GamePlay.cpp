@@ -1,11 +1,14 @@
 #include "GamePlay.hpp"
 #include "definItions.hpp"
 #include "ASTAR.hpp"
+#include "DIJKSTRA.hpp"
+#include "BFS.hpp"
 #include <random>
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
 	_nodeSelected = START_S;
+	_selectedAlgo = DIJKSTRA_S;
 	srand(time(nullptr));
 }
 
@@ -173,6 +176,7 @@ void GamePlay::ProcessInput()
 			else if(_content->_inputs->IsTextClicked(_visualize, Mouse::Left, *(_content->_window)) )
 			{
 				_visualizeB=true;
+				ClearVisitedAndPath();
 			}
 		}
 		
@@ -181,17 +185,51 @@ void GamePlay::ProcessInput()
 
 void GamePlay::Update(Time deltaTime)
 {
-
+	TIME_PER_FRAME=deltaTime;
 	if(_visualizeB)
-	{
+	{	
+		_solveStepByStepB=true;
+		if(_selectedAlgo == ASTAR_S)
 		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
-		_content->_alg->ProcessAlgorithmChange();
-		_content->_alg->GetCurrentAlgorithm()->SolveStepByStep(_cellStateInInt);
-		_content->_alg->GetCurrentAlgorithm()->Path();
+		 else if(_selectedAlgo == DIJKSTRA_S)
+		_content->_alg->AddAlgorithm(make_unique<DIJKSTRA>(_content),false);
+		// else if(_selectedAlgo == DFS_S)
+		// _content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
+		else if(_selectedAlgo == BFS_S)
+		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
+		// else if(_selectedAlgo == BI_D_BFS_S)
+		// _content->_alg->AddAlgorithm(make_unique<BIBFS>(_content),false);
 
+		_content->_alg->ProcessAlgorithmChange();
+		_content->_alg->GetCurrentAlgorithm()->Solve(_cellStateInInt);
+		_content->_alg->GetCurrentAlgorithm()->Path();
+		_content->_alg->PopCurrentAlgorithm();
+		_solvedOnceB = true;
 		_visualizeB=false;
 	}
-
+	
+	if(_solveFastB && _solvedOnceB)
+	{	
+		ClearVisitedAndPath();
+		_solveStepByStepB=false;
+		if(_selectedAlgo == ASTAR_S)
+		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
+		else if(_selectedAlgo == DIJKSTRA_S)
+		_content->_alg->AddAlgorithm(make_unique<DIJKSTRA>(_content),false);
+		// else if(_selectedAlgo == DFS_S)
+		// _content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
+		else if(_selectedAlgo == BFS_S)
+		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
+		// else if(_selectedAlgo == BI_D_BFS_S)
+		// _content->_alg->AddAlgorithm(make_unique<BIBFS>(_content),false);
+		
+		_content->_alg->ProcessAlgorithmChange();
+		_content->_alg->GetCurrentAlgorithm()->Solve(_cellStateInInt);
+		_content->_alg->GetCurrentAlgorithm()->Path();
+		_content->_alg->PopCurrentAlgorithm();
+		//_solvedOnce = true;
+		_solveFastB=false;
+	}
 	if(_drawMapB)
 	{
 		for(int i=0;i<COL;i++)
@@ -291,18 +329,24 @@ void GamePlay::CheckAndPlaceNode()
 		else if(_nodeSelected == START_S && _cellStateInInt[column][row]!=103)
 		{
 		_cells[_startCo.x][_startCo.y].setTexture(_content->_assets->GetTexture("NODE"));
+			_cellStateInInt[_startCo.x][_startCo.y]=100;
+
 		_cells[column][row].setTexture(_content->_assets->GetTexture("START"));
 		_cellStateInInt[column][row]=101;
 		_startCo=Vector2i(column,row);
+		_solveFastB=true;
 		}
 		else if(_nodeSelected == END_S && _cellStateInInt[column][row]!=103)
 		{
 		_cells[_endCo.x][_endCo.y].setTexture(_content->_assets->GetTexture("NODE"));
+			_cellStateInInt[_endCo.x][_endCo.y]=100;
+
 		_cells[column][row].setTexture(_content->_assets->GetTexture("END"));
 		_cellStateInInt[column][row]=102;
 		_endCo=Vector2i(column,row);
+		_solveFastB=true;
 		}
-		else if(_nodeSelected == UNV_S && _cellStateInInt[column][row]!=102 && _cellStateInInt[column][row]!=102)
+		else if(_nodeSelected == UNV_S && _cellStateInInt[column][row]!=102 && _cellStateInInt[column][row]!=101)
 		{
 		_cells[column][row].setTexture(_content->_assets->GetTexture("NODE"));
 		_cellStateInInt[column][row]=100;
@@ -348,12 +392,42 @@ void GamePlay::MarkSelectedNodeText()
 
 void GamePlay::DrawVisited(int x,int y)
 {
-	_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED1"));
-	_content->_window->draw(_cells[x][y]);
+	if(_cellStateInInt[x][y]!=101 && _cellStateInInt[x][y]!=102)
+	{
+		_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED2"));
+		if(_solveStepByStepB)
+		{
+			_elapsedTimeForVisited+=TIME_PER_FRAME;
+			if(_elapsedTimeForVisited.asSeconds() >= .1)
+			{
+				//_content->_window->draw(_cells[x][y]);
+				Draw();
+				_elapsedTimeForVisited=Time::Zero;
+			}
+		}
+	}
 }
 
 void GamePlay::DrawParent(int x,int y)
 {
 	_cells[x][y].setTexture(_content->_assets->GetTexture("PATH"));
-	_content->_window->draw(_cells[x][y]);
+	if(_solveStepByStepB)
+		{
+			//_content->_window->draw(_cells[x][y]);
+			Draw();
+		}
+	
+}
+
+void GamePlay::ClearVisitedAndPath()
+{
+	for(int i=0;i<COL;i++)
+		for(int j=0;j<ROW;j++)
+		{
+			if(_cellStateInInt[i][j]!=101 && _cellStateInInt[i][j]!=102 && _cellStateInInt[i][j]!=103  )
+			{
+				_cells[i][j].setTexture(_content->_assets->GetTexture("NODE"));
+				_cellStateInInt[i][j]=100;
+			}
+		}
 }
