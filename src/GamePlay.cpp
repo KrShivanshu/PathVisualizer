@@ -3,12 +3,13 @@
 #include "ASTAR.hpp"
 #include "DIJKSTRA.hpp"
 #include "BFS.hpp"
+#include "DFS.hpp"
 #include <random>
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
 	_nodeSelected = START_S;
-	_selectedAlgo = DIJKSTRA_S;
+	_selectedAlgo = DFS_S;
 	srand(time(nullptr));
 }
 
@@ -165,6 +166,7 @@ void GamePlay::ProcessInput()
 		}
 		else if(_content->_inputs->IsSpriteClicked(_funcBG, Mouse::Left, *(_content->_window)))
 		{
+			_solvedOnceB=false;
 			if(_content->_inputs->IsTextClicked(_drawmap, Mouse::Left, *(_content->_window)) )
 			{
 				_drawMapB=true;
@@ -193,8 +195,8 @@ void GamePlay::Update(Time deltaTime)
 		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
 		 else if(_selectedAlgo == DIJKSTRA_S)
 		_content->_alg->AddAlgorithm(make_unique<DIJKSTRA>(_content),false);
-		// else if(_selectedAlgo == DFS_S)
-		// _content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
+		else if(_selectedAlgo == DFS_S)
+		_content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
 		else if(_selectedAlgo == BFS_S)
 		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
 		// else if(_selectedAlgo == BI_D_BFS_S)
@@ -216,8 +218,8 @@ void GamePlay::Update(Time deltaTime)
 		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
 		else if(_selectedAlgo == DIJKSTRA_S)
 		_content->_alg->AddAlgorithm(make_unique<DIJKSTRA>(_content),false);
-		// else if(_selectedAlgo == DFS_S)
-		// _content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
+		else if(_selectedAlgo == DFS_S)
+		_content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
 		else if(_selectedAlgo == BFS_S)
 		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
 		// else if(_selectedAlgo == BI_D_BFS_S)

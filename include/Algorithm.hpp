@@ -15,6 +15,7 @@ struct Node
 		bool isParent = false;
 		bool bObstacle = false;
 		bool bVisited = false;
+		bool bConsidered = false;
 		float fGlobalGoal;
 		float fLocalGoal;
 		int x;
