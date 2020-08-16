@@ -2,6 +2,7 @@
 #include "definitions.hpp"
 #include "SFML/Graphics.hpp"
 #include "SplashScreen.hpp"
+#include "GamePlay.hpp"
 
 using namespace std;
 using namespace Engine;
@@ -11,7 +12,7 @@ Engine::Game::Game() :_content(make_shared<Content>())
 {
 	_content->_window->create(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "PATH VISUALIZER", Style::Close);
 	//add splash screen state here
-	_content->_states->AddState(make_unique<SplashScreen>(_content), true);
+	_content->_states->AddState(make_unique<GamePlay>(_content), true);
 }
 
 Engine::Game::~Game()

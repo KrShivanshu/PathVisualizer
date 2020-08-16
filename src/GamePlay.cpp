@@ -112,8 +112,8 @@ void GamePlay::Init()
 	
 	_messageT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_messageT.setString("Press Visualise to find path");
-	_messageT.setCharacterSize(25);
-	_messageT.setPosition(495,106);
+	_messageT.setCharacterSize(30);
+	_messageT.setPosition(_content->_window->getSize().x/2 - _messageT.getGlobalBounds().width/2, 12 );
 
 	_drawmap.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_drawmap.setString("DrawMap");
@@ -123,17 +123,17 @@ void GamePlay::Init()
 	_clear.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_clear.setString("ClearMap");
 	_clear.setCharacterSize(30);
-	_clear.setPosition(476,12);
+	_clear.setPosition(252,12);
 
 	_alg.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_alg.setString("Reset");
 	_alg.setCharacterSize(30);
-	_alg.setPosition(860,12);
+	_alg.setPosition(1328,12);
 
 	_visualize.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_visualize.setString("Visualize");
 	_visualize.setCharacterSize(30);
-	_visualize.setPosition(1244,12);
+	_visualize.setPosition(1448,12);
 
 
 	_background.setTexture(_content->_assets->GetTexture("GAME_PLAY_BG"));
@@ -250,14 +250,22 @@ void GamePlay::Update(Time deltaTime)
 
 	if(_solvedOnceB)
 	{
-		if(_pathFoundB)
+		if(_pathFoundB){
+			_messageT.setFillColor(Color::Green);
 			_messageT.setString("Hurray! Path Found");
+		}
 		else
+		{
+			_messageT.setFillColor(Color::Cyan);
 			_messageT.setString("Opps! No Path Found");
+		}
+		_messageT.setPosition(_content->_window->getSize().x/2 - _messageT.getGlobalBounds().width/2, 12 );
 	}
 	else
 	{
+		_messageT.setFillColor(Color::Yellow);
 		_messageT.setString("Press Visualise to find path");
+		_messageT.setPosition(_content->_window->getSize().x/2 - _messageT.getGlobalBounds().width/2, 12 );
 	}
 	
 
@@ -383,7 +391,7 @@ void GamePlay::Draw()
 	_content->_window->draw(_bidS);
 	_content->_window->draw(_dfsS);
 	_content->_window->draw(_dijS);
-	//_content->_window->draw(_messageT);
+	_content->_window->draw(_messageT);
 	_content->_window->draw(_cellsBG);
 	for(int i=0;i<COL;i++)
 		for(int j=0;j<ROW;j++)
