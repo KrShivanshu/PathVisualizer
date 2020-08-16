@@ -41,18 +41,25 @@ public:
     Sprite _wallS;
     Sprite _unVisS;
     Sprite _optionBG;
+    Sprite _bfsS;
+    Sprite _dfsS;
+    Sprite _dijS;
+    Sprite _astarS;
+    Sprite _bidS;
     Text _startT;
     Text _endT;
     Text _pathT;
     Text _visT;
     Text _unVisT;
     Text _wallT;
+    Text _messageT;
     Vector2i _startCo = Vector2i(16,15);
     Vector2i _endCo = Vector2i(48,15);
     int _cellStateInInt[66][30];
     void CheckAndPlaceNode();
     void MarkSelectedNodeText();
     void ClearVisitedAndPath();
+    void MarkAlgorithm();
     bool _drawMapB=false;
     bool _clearMapB=false;
     bool _visualizeB=false;
@@ -62,6 +69,7 @@ public:
     bool _solveFastB=false;
     bool _solvedOnceB=false;
     string _selectedAlgo;
+    bool _pathFoundB=false;
     //void DrawVisited(int x,int y);
     
 

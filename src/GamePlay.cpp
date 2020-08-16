@@ -8,8 +8,8 @@
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
-	_nodeSelected = START_S;
-	_selectedAlgo = DFS_S;
+	_nodeSelected = WALL_S;
+	_selectedAlgo = ASTAR_S;
 	srand(time(nullptr));
 }
 
@@ -32,6 +32,17 @@ void GamePlay::Init()
 	_content->_assets->AddTextures("VISITED3",VISITED3);
 	_content->_assets->AddTextures("WALL",WALL);
 	_content->_assets->AddFont("FIRST_FONT",FIRST_FONT);
+	_content->_assets->AddTextures("ASTAR1",ASTAR1);
+	_content->_assets->AddTextures("ASTAR2",ASTAR2);
+	_content->_assets->AddTextures("BFS1",BFS1);
+	_content->_assets->AddTextures("BFS2",BFS2);
+	_content->_assets->AddTextures("BID1",BID1);
+	_content->_assets->AddTextures("BID2",BID2);
+	_content->_assets->AddTextures("DFS1",DFS1);
+	_content->_assets->AddTextures("DFS2",DFS2);
+	_content->_assets->AddTextures("DIJ1",DIJ1);
+	_content->_assets->AddTextures("DIJ2",DIJ2);
+
 	for(int i=0;i<COL;i++)
 		for(int j=0;j<ROW;j++)
 		{
@@ -48,46 +59,61 @@ void GamePlay::Init()
 	_vis1S.setTexture(_content->_assets->GetTexture("VISITED1"));
 	_vis2S.setTexture(_content->_assets->GetTexture("VISITED2"));
 	_vis3S.setTexture(_content->_assets->GetTexture("VISITED3"));
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR2"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS2"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID2"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS2"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ2"));
 	
+	_astarS.setPosition(60,110);
+	_bfsS.setPosition(392,110);
+	_bidS.setPosition(724,110);
+	_dfsS.setPosition(1056,110);
+	_dijS.setPosition(1388,110);
 	
 	_unVisS.setPosition(60,70);
 	_unVisT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_unVisT.setString("Unvisited");
 	_unVisT.setCharacterSize(25);
-	_unVisT.setPosition(95,66);
+	_unVisT.setPosition(90,66);
 
-	_wallS.setPosition(460,70);
+	_wallS.setPosition(325,70);
 	_wallT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_wallT.setString("Walls");
 	_wallT.setCharacterSize(25);
-	_wallT.setPosition(495,66);
+	_wallT.setPosition(355,66);
 
-	_vis1S.setPosition(860,70);
-	_vis2S.setPosition(825,70);
+	_vis1S.setPosition(590,70);
+	_vis2S.setPosition(560,70);
 	_visT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_visT.setString("Visited");
 	_visT.setCharacterSize(25);
-	_visT.setPosition(895,66);
+	_visT.setPosition(620,66);
 
-	_pathS.setPosition(1260,70);
+	_pathS.setPosition(855,70);
 	_pathT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_pathT.setString("Path");
 	_pathT.setCharacterSize(25);
-	_pathT.setPosition(1295,66);
+	_pathT.setPosition(885,66);
 
 
-	_startS.setPosition(1260,110);
+	_startS.setPosition(1120,70);
 	_startT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_startT.setString("Start");
 	_startT.setCharacterSize(25);
-	_startT.setPosition(1295,106);
+	_startT.setPosition(1150,66);
 	
-	_endS.setPosition(60,110);
+	_endS.setPosition(1385,70);
 	_endT.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_endT.setString("End");
 	_endT.setCharacterSize(25);
-	_endT.setPosition(95,106);
+	_endT.setPosition(1415,66);
 	
+	
+	_messageT.setFont(_content->_assets->GetFont("FIRST_FONT"));
+	_messageT.setString("Press Visualise to find path");
+	_messageT.setCharacterSize(25);
+	_messageT.setPosition(495,106);
 
 	_drawmap.setFont(_content->_assets->GetFont("FIRST_FONT"));
 	_drawmap.setString("DrawMap");
@@ -100,7 +126,7 @@ void GamePlay::Init()
 	_clear.setPosition(476,12);
 
 	_alg.setFont(_content->_assets->GetFont("FIRST_FONT"));
-	_alg.setString("Algorithm");
+	_alg.setString("Reset");
 	_alg.setCharacterSize(30);
 	_alg.setPosition(860,12);
 
@@ -146,23 +172,47 @@ void GamePlay::ProcessInput()
 			if(_content->_inputs->IsTextClicked(_startT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_startS, Mouse::Left, *(_content->_window)))
 			{
 				_nodeSelected = START_S;
-				MarkSelectedNodeText();
+				
 			}
 			else if(_content->_inputs->IsTextClicked(_endT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_endS, Mouse::Left, *(_content->_window)))
 			{
 				_nodeSelected = END_S;
-				MarkSelectedNodeText();
+				
 			}
 			else if(_content->_inputs->IsTextClicked(_unVisT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_unVisS, Mouse::Left, *(_content->_window)))
 			{
 				_nodeSelected = UNV_S;
-				MarkSelectedNodeText();
+				
 			}
 			else if(_content->_inputs->IsTextClicked(_wallT, Mouse::Left, *(_content->_window)) || _content->_inputs->IsSpriteClicked(_wallS, Mouse::Left, *(_content->_window)))
 			{
 				_nodeSelected = WALL_S;
-				MarkSelectedNodeText();
+				
 			}
+			else if(_content->_inputs->IsSpriteClicked(_astarS, Mouse::Left, *(_content->_window)))
+			{
+				_selectedAlgo = ASTAR_S;
+			}
+			else if(_content->_inputs->IsSpriteClicked(_bfsS, Mouse::Left, *(_content->_window)))
+			{
+				_selectedAlgo = BFS_S;
+			}
+			else if(_content->_inputs->IsSpriteClicked(_bidS, Mouse::Left, *(_content->_window)))
+			{
+				_selectedAlgo = BI_D_BFS_S;
+			}
+			else if(_content->_inputs->IsSpriteClicked(_dfsS, Mouse::Left, *(_content->_window)))
+			{
+				_selectedAlgo = DFS_S;
+			}
+			else if(_content->_inputs->IsSpriteClicked(_dijS, Mouse::Left, *(_content->_window)))
+			{
+				_selectedAlgo = DIJKSTRA_S;
+			}
+			
+			
+
+
 		}
 		else if(_content->_inputs->IsSpriteClicked(_funcBG, Mouse::Left, *(_content->_window)))
 		{
@@ -180,6 +230,14 @@ void GamePlay::ProcessInput()
 				_visualizeB=true;
 				ClearVisitedAndPath();
 			}
+			else if(_content->_inputs->IsTextClicked(_alg, Mouse::Left, *(_content->_window)) )
+			{
+				_nodeSelected = WALL_S;
+				_selectedAlgo = ASTAR_S;
+				_startCo = Vector2i(16,15);
+				_endCo = Vector2i(48,15);
+				Init();
+			}
 		}
 		
 	}
@@ -187,9 +245,26 @@ void GamePlay::ProcessInput()
 
 void GamePlay::Update(Time deltaTime)
 {
+	MarkAlgorithm();
+	MarkSelectedNodeText();
+
+	if(_solvedOnceB)
+	{
+		if(_pathFoundB)
+			_messageT.setString("Hurray! Path Found");
+		else
+			_messageT.setString("Opps! No Path Found");
+	}
+	else
+	{
+		_messageT.setString("Press Visualise to find path");
+	}
+	
+
 	TIME_PER_FRAME=deltaTime;
 	if(_visualizeB)
 	{	
+		_pathFoundB=false;
 		_solveStepByStepB=true;
 		if(_selectedAlgo == ASTAR_S)
 		_content->_alg->AddAlgorithm(make_unique<ASTAR>(_content),false);
@@ -212,6 +287,7 @@ void GamePlay::Update(Time deltaTime)
 	
 	if(_solveFastB && _solvedOnceB)
 	{	
+		_pathFoundB=false;
 		ClearVisitedAndPath();
 		_solveStepByStepB=false;
 		if(_selectedAlgo == ASTAR_S)
@@ -302,6 +378,12 @@ void GamePlay::Draw()
 	_content->_window->draw(_endT);
 	_content->_window->draw(_pathS);
 	_content->_window->draw(_pathT);
+	_content->_window->draw(_astarS);
+	_content->_window->draw(_bfsS);
+	_content->_window->draw(_bidS);
+	_content->_window->draw(_dfsS);
+	_content->_window->draw(_dijS);
+	//_content->_window->draw(_messageT);
 	_content->_window->draw(_cellsBG);
 	for(int i=0;i<COL;i++)
 		for(int j=0;j<ROW;j++)
@@ -360,35 +442,35 @@ void GamePlay::MarkSelectedNodeText()
 {
 	if(_nodeSelected == START_S)
 	{
-		_startT.setOutlineThickness(1.f);
+		_startT.setOutlineThickness(3.f);
 		_endT.setOutlineThickness(0.f);
 		_wallT.setOutlineThickness(0.f);
 		_unVisT.setOutlineThickness(0.f);
-		_startT.setOutlineColor(Color::White);
+		_startT.setOutlineColor(Color::Red);
 	}
 	else if(_nodeSelected == END_S)
 	{
 		_startT.setOutlineThickness(0.f);
-		_endT.setOutlineThickness(1.f);
+		_endT.setOutlineThickness(3.f);
 		_wallT.setOutlineThickness(0.f);
 		_unVisT.setOutlineThickness(0.f);
-		_endT.setOutlineColor(Color::White);
+		_endT.setOutlineColor(Color::Red);
 	}
 	else if(_nodeSelected == WALL_S)
 	{
 		_startT.setOutlineThickness(0.f);
 		_endT.setOutlineThickness(0.f);
-		_wallT.setOutlineThickness(1.f);
+		_wallT.setOutlineThickness(3.f);
 		_unVisT.setOutlineThickness(0.f);
-		_wallT.setOutlineColor(Color::White);
+		_wallT.setOutlineColor(Color::Red);
 	}
 	else if(_nodeSelected == UNV_S)
 	{
 		_startT.setOutlineThickness(0.f);
 		_endT.setOutlineThickness(0.f);
 		_wallT.setOutlineThickness(0.f);
-		_unVisT.setOutlineThickness(1.f);
-		_unVisT.setOutlineColor(Color::White);
+		_unVisT.setOutlineThickness(3.f);
+		_unVisT.setOutlineColor(Color::Red);
 	}
 }
 
@@ -412,6 +494,7 @@ void GamePlay::DrawVisited(int x,int y)
 
 void GamePlay::DrawParent(int x,int y)
 {
+	_pathFoundB=true;
 	_cells[x][y].setTexture(_content->_assets->GetTexture("PATH"));
 	if(_solveStepByStepB)
 		{
@@ -432,4 +515,49 @@ void GamePlay::ClearVisitedAndPath()
 				_cellStateInInt[i][j]=100;
 			}
 		}
+}
+
+void GamePlay::MarkAlgorithm()
+{
+	if(_selectedAlgo==ASTAR_S)
+	{
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR1"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS2"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID2"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS2"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ2"));
+	}
+	else if(_selectedAlgo==BFS_S)
+	{
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR2"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS1"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID2"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS2"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ2"));
+	}
+	else if(_selectedAlgo==BI_D_BFS_S)
+	{
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR2"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS2"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID1"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS2"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ2"));
+	}
+	else if(_selectedAlgo==DFS_S)
+	{
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR2"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS2"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID2"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS1"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ2"));
+	}
+	else if(_selectedAlgo==DIJKSTRA_S)
+	{
+	_astarS.setTexture(_content->_assets->GetTexture("ASTAR2"));
+	_bfsS.setTexture(_content->_assets->GetTexture("BFS2"));
+	_bidS.setTexture(_content->_assets->GetTexture("BID2"));
+	_dfsS.setTexture(_content->_assets->GetTexture("DFS2"));
+	_dijS.setTexture(_content->_assets->GetTexture("DIJ1"));
+	}
+	
 }

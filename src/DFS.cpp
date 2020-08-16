@@ -135,8 +135,12 @@ void DFS::Path()
 
 				nodes[p->y*COL + p->x].isParent = true;
 				p = p->parent;
+                
                 if(p!=startNode)
                 _content->_states->GetCurrentState()->DrawParent(p->x,p->y);
+
+                if(p==startNode)
+                break;
 			}
 		}
 }

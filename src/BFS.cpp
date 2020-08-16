@@ -86,8 +86,6 @@ void BFS::Solve(int arr[COL][ROW])
 		while (!listNotTestedNodes.empty() && nodeCurrent != endNode)
 		{
 
-			
-
 			while (!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
 				listNotTestedNodes.pop_front();
 

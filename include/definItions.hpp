@@ -20,7 +20,7 @@
 #define GAME_PLAY_BG "Assets/textures/Wedding Day Blues.jpg"
 #define FUNCTION_BG "Assets/textures/Shine.jpg"
 #define CELLS_BG "Assets/textures/Bourbon.png"
-#define OPTION_BG "Assets/textures/Pizelex.jpg"
+#define OPTION_BG "Assets/textures/SkyOP.jpg"
 
 #define START_S "START_BUTTON_SELECTED"
 #define END_S "END_BUTTON_SELECTED"
@@ -32,3 +32,14 @@
 #define DFS_S "DFS_ALG_SELECTED"
 #define BFS_S "BFS_ALG_SELECTED"
 #define BI_D_BFS_S "BI_DIRECTIONAL_BFS_ALG_SELECTED"
+
+#define ASTAR1 "Assets/textures/astarRed.png"
+#define ASTAR2 "Assets/textures/astarGray.png"
+#define BFS1 "Assets/textures/bfsRed.png"
+#define BFS2 "Assets/textures/bfsGray.png"
+#define BID1 "Assets/textures/biRed.png"
+#define BID2 "Assets/textures/biGray.png"
+#define DFS1 "Assets/textures/dfsRed.png"
+#define DFS2 "Assets/textures/dfsGray.png"
+#define DIJ1 "Assets/textures/dijRed.png"
+#define DIJ2 "Assets/textures/dijGray.png"
