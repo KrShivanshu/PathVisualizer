@@ -78,7 +78,7 @@ void BFS::Solve(int arr[COL][ROW])
 		
 
 		Node *nodeCurrent = startNode;
-		startNode->fLocalGoal = 0.0f;
+		
 
 		list<Node*> listNotTestedNodes;
 		listNotTestedNodes.push_back(startNode);

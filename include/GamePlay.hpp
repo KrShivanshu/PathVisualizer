@@ -65,6 +65,7 @@ public:
     bool _visualizeB=false;
     Time TIME_PER_FRAME;
     Time _elapsedTimeForVisited=Time::Zero;
+    Time _elapsedTimeForVisited2=Time::Zero;
     bool _solveStepByStepB=true;
     bool _solveFastB=false;
     bool _solvedOnceB=false;

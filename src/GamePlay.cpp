@@ -4,12 +4,13 @@
 #include "DIJKSTRA.hpp"
 #include "BFS.hpp"
 #include "DFS.hpp"
+#include "BIDIRECTIONAL.hpp"
 #include <random>
 
 GamePlay::GamePlay(shared_ptr<Content>& content):_content(content)
 {
 	_nodeSelected = WALL_S;
-	_selectedAlgo = ASTAR_S;
+	_selectedAlgo = BI_D_BFS_S;
 	srand(time(nullptr));
 }
 
@@ -282,8 +283,8 @@ void GamePlay::Update(Time deltaTime)
 		_content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
 		else if(_selectedAlgo == BFS_S)
 		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
-		// else if(_selectedAlgo == BI_D_BFS_S)
-		// _content->_alg->AddAlgorithm(make_unique<BIBFS>(_content),false);
+		else if(_selectedAlgo == BI_D_BFS_S)
+		_content->_alg->AddAlgorithm(make_unique<BIDIRECTIONAL>(_content),false);
 
 		_content->_alg->ProcessAlgorithmChange();
 		_content->_alg->GetCurrentAlgorithm()->Solve(_cellStateInInt);
@@ -306,8 +307,8 @@ void GamePlay::Update(Time deltaTime)
 		_content->_alg->AddAlgorithm(make_unique<DFS>(_content),false);
 		else if(_selectedAlgo == BFS_S)
 		_content->_alg->AddAlgorithm(make_unique<BFS>(_content),false);
-		// else if(_selectedAlgo == BI_D_BFS_S)
-		// _content->_alg->AddAlgorithm(make_unique<BIBFS>(_content),false);
+		else if(_selectedAlgo == BI_D_BFS_S)
+		_content->_alg->AddAlgorithm(make_unique<BIDIRECTIONAL>(_content),false);
 		
 		_content->_alg->ProcessAlgorithmChange();
 		_content->_alg->GetCurrentAlgorithm()->Solve(_cellStateInInt);
@@ -487,13 +488,16 @@ void GamePlay::DrawVisited(int x,int y)
 	if(_cellStateInInt[x][y]!=101 && _cellStateInInt[x][y]!=102)
 	{
 		_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED2"));
+		_cellStateInInt[x][y]=104;
 		if(_solveStepByStepB)
 		{
 			_elapsedTimeForVisited+=TIME_PER_FRAME;
+			
 			if(_elapsedTimeForVisited.asSeconds() >= .1)
 			{
 				//_content->_window->draw(_cells[x][y]);
 				Draw();
+				
 				_elapsedTimeForVisited=Time::Zero;
 			}
 		}
@@ -508,6 +512,7 @@ void GamePlay::DrawParent(int x,int y)
 		{
 			//_content->_window->draw(_cells[x][y]);
 			Draw();
+			
 		}
 	
 }
