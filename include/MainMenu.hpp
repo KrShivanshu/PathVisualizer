@@ -20,5 +20,10 @@ private:
 	Sprite _backGround;
 	Sprite _playButton;
 	//Sprite _exitButton;
+	Text _astarT;
+    Text _bfsT;
+    Text _bidT;
+    Text _dfsT;
+    Text _dijT;
 };
 

@@ -71,6 +71,7 @@ public:
     bool _solvedOnceB=false;
     string _selectedAlgo;
     bool _pathFoundB=false;
+    bool b=0;
     //void DrawVisited(int x,int y);
     
 

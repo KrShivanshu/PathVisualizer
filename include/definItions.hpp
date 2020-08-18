@@ -8,7 +8,7 @@
 #define FIRST_FONT "Assets/fonts/Courierprime-1OVL.ttf"
 #define SPALSH_SCREEN_TIME 3.f
 #define PLAY_BUTTON_PATH "Assets/textures/playN.png"
-#define MAIN_MENU_BG "Assets/textures/Sky.jpp"
+#define MAIN_MENU_BG "Assets/textures/Sky.jpg"
 #define NODE "Assets/textures/Cell.png"
 #define VISITED1 "Assets/textures/visited1 ().png"
 #define VISITED2 "Assets/textures/visited2 ().png"
@@ -17,10 +17,10 @@
 #define START "Assets/textures/start ().png"
 #define END "Assets/textures/end ().png"
 #define WALL "Assets/textures/block ().png"
-#define GAME_PLAY_BG "Assets/textures/Wedding Day Blues.jpg"
+#define GAME_PLAY_BG "Assets/textures/Skyline.jpg"
 #define FUNCTION_BG "Assets/textures/Shine.jpg"
 #define CELLS_BG "Assets/textures/Bourbon.png"
-#define OPTION_BG "Assets/textures/SkyOP.jpg"
+#define OPTION_BG "Assets/textures/Pizelex.png"
 
 #define START_S "START_BUTTON_SELECTED"
 #define END_S "END_BUTTON_SELECTED"

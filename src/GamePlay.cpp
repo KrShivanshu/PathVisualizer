@@ -487,8 +487,15 @@ void GamePlay::DrawVisited(int x,int y)
 {
 	if(_cellStateInInt[x][y]!=101 && _cellStateInInt[x][y]!=102)
 	{
+		if(b==0){
 		_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED2"));
-		_cellStateInInt[x][y]=104;
+		b=1;
+		}
+		else{
+			_cells[x][y].setTexture(_content->_assets->GetTexture("VISITED1"));
+		b=0;
+		} 
+		//_cellStateInInt[x][y]=104;
 		if(_solveStepByStepB)
 		{
 			_elapsedTimeForVisited+=TIME_PER_FRAME;

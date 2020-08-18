@@ -120,7 +120,7 @@ void BIDIRECTIONAL::Solve(int arr[COL][ROW])
                 }
                 else if(nodeNeighbour->bConsideredE)
                     {
-                        cout<<"startNode found the path first\n";
+                        //cout<<"startNode found the path first\n";
                         Node *temp=nodeNeighbour->parent;
                         Node *tempParent = nodeCurrent;
                         Node *tempCurrent = nodeNeighbour;
@@ -157,7 +157,7 @@ void BIDIRECTIONAL::Solve(int arr[COL][ROW])
                     }
                     else if(nodeNeighbour->bConsidered)
                     {   
-                        cout<<"endNode found the path first\n";
+                        //cout<<"endNode found the path first\n";
                         Node *temp=nodeCurrentE->parent;      
                         Node *tempParent = nodeNeighbour;
                         Node *tempCurrent = nodeCurrentE;

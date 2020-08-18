@@ -50,7 +50,7 @@ void SplashScreen::Update(Time deltaTime)
 {
 	if (_clock.getElapsedTime().asSeconds() > SPALSH_SCREEN_TIME)
 	{
-		_content->_states->AddState(make_unique<GamePlay>(_content), true);
+		_content->_states->AddState(make_unique<MainMenu>(_content), true);
 	}
 }
 
