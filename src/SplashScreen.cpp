@@ -22,7 +22,7 @@ void SplashScreen::Init()
 	_backGround.setTexture(_content->_assets->GetTexture("SPLASH_SCREEN_BG"));
 	_title.setFont(_content->_assets->GetFont("TITLE_FONT"));
 
-	_title.setString("Nerd Gaming");
+	_title.setString("Nerd Presents");
 	_title.setCharacterSize(50);
 
 	_backGround.setOrigin(_backGround.getGlobalBounds().width / 2, _backGround.getGlobalBounds().height / 2);
