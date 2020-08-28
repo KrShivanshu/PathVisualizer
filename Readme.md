@@ -55,7 +55,7 @@ It is application made using c++ and SFML(Simple and fast multimedia library). A
    It uses the opposite strategy as depth-first search, which instead explores the node branch as far as possible before being forced to backtrack and expand other nodes.
 
 
-![BFS](ScreenShot/BFS.png)
+![BFS](https://github.com/KrShivanshu/PathVisualizer/blob/master/ScreenShot/BFS.png)
 
 #
 
