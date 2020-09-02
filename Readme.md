@@ -106,11 +106,11 @@ It is an application made using c++ and SFML(Simple and fast multimedia library)
 
 ## Magic Visualizing
 
-![StepByStepVisualizing](https://github.com/KrShivanshu/Resources/blob/master/PATH/MagicVisualizer.gif)
+![StepByStepVisualizing](https://github.com/KrShivanshu/Resources/blob/master/PATH/MagicVisualizer.mp4)
 
 ## Iterative Visualizing
 
-![StepByStepVisualizing](https://github.com/KrShivanshu/Resources/blob/master/PATH/StepVisualizer.gif)
+![StepByStepVisualizing](https://github.com/KrShivanshu/Resources/blob/master/PATH/StepVisualizer.mp4)
 
 ## How to use this
 * ### Prerequisites 
