@@ -119,5 +119,13 @@ It is an application made using c++ and SFML(Simple and fast multimedia library)
    3. VSCode
 * ### Steps to follow to run it using VSCode Editor
    [YouTube Video](https://www.youtube.com/watch?v=M3zYZTdlqyg)
+* ### Use exe file
+   You can also run the application using the .exe file located in bin folder with name main.exe
+   But first you need to clone the whole project to your computer
 
-
+## Possible Future Update
+* Add more algorithms like: Sample Algorithm, D*, Any-Angle Path Algorithm
+* We can add Sorting algorithm visualizer
+* We can also add Searching algorithm visualizer
+* Add seperate buttons for clearing Walls, Visites Nodes, and Paths
+* More types of map rather than just a randomly created walls 
